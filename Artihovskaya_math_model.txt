@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import linear_sum_assignment
+
+print("Библиотеки успешно импортированы!")
+
+# Задаем расстояния между городами (матрица расстояний)
+distance_matrix = np.array([
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+])
+
+# Решаем задачу коммивояжера с помощью метода Венгерского алгоритма
+row_ind, col_ind = linear_sum_assignment(distance_matrix)
+
+# Получаем оптимальный маршрут
+optimal_route = col_ind.tolist()
+optimal_distance = distance_matrix[row_ind, col_ind].sum()
+
+# Выводим результаты
+print("Оптимальный маршрут:", optimal_route)
+print("Общая длина маршрута:", optimal_distance)
+
+# Визуализация маршрута
+plt.figure(figsize=(8,6))
+plt.scatter(range(len(distance_matrix)), range(len(distance_matrix)), color='blue')
+for i in range(len(optimal_route)):
+    plt.annotate(f'Город {i}', (i, i), textcoords="offset points", xytext=(0,10), ha='center')
+
+for i in range(len(optimal_route)-1):
+    plt.plot([optimal_route[i], optimal_route[i+1]], [optimal_route[i], optimal_route[i+1]], 'r-')
+
+plt.title('Оптимальный маршрут коммивояжёра')
+plt.xlabel('Города')
+plt.ylabel('Города')
+plt.grid()
+plt.show()
